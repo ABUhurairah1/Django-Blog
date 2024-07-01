@@ -8,6 +8,13 @@
     <title>Login Form</title>
     <link rel="stylesheet" href="{% static 'style/style.css'%}">
 </head>
+<style>
+    .options{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+</style>
 <body>
     <form action="{% url 'Login' %}" method="post">
         <h1>Login</h1>
@@ -20,7 +27,11 @@
             <label for="password">Password</label>
             <input type="password" name="password">
         </div>
-        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        <div class="options">
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+            <a href="{% url 'Sign-up' %}">Create new account</a>
+        </div>
+
         <input class="btn" type="submit" name="submit" value="Login">
     </form>
 </body>
