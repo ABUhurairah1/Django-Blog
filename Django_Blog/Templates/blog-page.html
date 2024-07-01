@@ -15,17 +15,87 @@
         text-align: center;
         padding: 0px 50px;
     }
+    h3{
+        float: right;
+    }
+    .comment-box{
+    width: 80%;
+    margin:30px auto;
+    padding: 12px 24px;
+    }
+    .comment-box input{
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0px 8px;
+    }
+    .comment{
+        width: 80%;
+        text-align: left;
+        margin: 20px auto;
+        padding: 10px 20px;
+        border-radius: 12px;
+        max-height: none;
+    }
+    .delete-button{
+        width: 100%;
+        margin: auto;
+    }
+    .comment-body{
+        margin-left: 50px;
+    }
+    .comment-body p{
+        padding-left: 20px;
+    }
+    
+    .comments .btn{
+        float: right;
+    }
+    .comments{
+        margin-bottom: 50px;
+    }
 </style>
 <body>
     <h1>Blog</h1>
+    <h3>Uploaded by : {{blog.host.username}}</h3>
     <div class="blog">
         <h2>{{blog.name}}</h2>
         <img class="blog-img" src="{{blog.image.url}}">
         <p><b>Description : </b>{{blog.description}}</p>
     </div>
+    {% if request.user.is_authenticated %}
+    {% if request.user == blog.host %}
         <a class="btn" href="{% url 'Update-Blog' blog.id%}">Edit</a>
         <a class="btn" href="{% url 'Delete-Blog' blog.id%}">Delete</a>
-
+    {% endif %}
+    {% endif %}
+<h2>Comments</h2>
+{% if request.user.is_authenticated %}
+<div class="comments">
+    <div class="comment-box">
+        <form method="post">
+            {%csrf_token%}
+            <input type="text" name="comment" placeholder = "Add Comment"><hr>
+            <button class="btn" name="submit">Comment</button>
+        </form>
+    </div>
+    {% endif %}
+    {% for comment in comments %}
+    <div class="comment">
+        <div class="comment-header">
+            <p>@{{comment.host.username}}</p>
+        </div>
+        <div class="comment-body">
+            <p>{{comment.comment}}</p><hr>
+        </div>
+        {% if request.user == comment.host %}
+        <div class="delete-button">
+            <a class="btn" href="{% url 'Delete-comment' comment.id %}">Delete</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
 </body>
 </html>
 {% endblock %}

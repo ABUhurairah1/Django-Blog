@@ -15,9 +15,29 @@
     a{
         text-decoration: none;
     }
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+.form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+}
+
 </style>
 <body>
-    <form action="#" method="post">
+    <div class="container">
+
+    {% if page == "Delete-Blog" %}
+    
+    <form action="#" method="post" class="form-container">
         {%csrf_token%}
         <h3>Did You Realy Want To 
             Delete This "{{blog.name}}" 
@@ -26,7 +46,17 @@
         <input class="btn" type="submit" value="Yes">
         <a class="btn" href="{% url 'Blog' blog.id %}">No</a>
     </form>
-   
-    
+   {% else %}
+   <form action="#" method="post" class="form-container">
+    {%csrf_token%}
+    <h3>Did You Realy Want To 
+        Delete This "{{comment.comment}}" 
+        comment?
+    </h3>
+    <input class="btn" type="submit" value="Yes">
+    <a class="btn" href="{% url 'Home' %}">No</a>
+    {%endif%}
+</form>
+</div>
 </body>
 </html>

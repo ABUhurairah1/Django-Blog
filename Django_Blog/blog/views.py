@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout,authenticate,update_session_auth_hash
-from .models import Blog
+from .models import Blog,Comment
 from django.contrib import messages
-from .forms import BlogForm
+from .forms import BlogForm,CommentForm
 from django.contrib.auth.forms import UserCreationForm,SetPasswordForm
 
 # Create your views here.
@@ -16,15 +16,39 @@ def Home(request):
 
 def Blog_page(request,blog_id):
     blog = Blog.objects.get(id = blog_id)
-    context = {'blog':blog}
+    comments = Comment.objects.filter(blog=blog)
+    user = request.user
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            blog_comment = form.save(commit=False)
+            blog_comment.host = user
+            blog_comment.blog = blog
+            blog_comment.save()
+    else :
+        form = CommentForm()
+
+    context = {'blog':blog,'comments' : comments,'form':form}
     return render(request,'blog-page.html',context)
 
+def Comment_delete(request,comment_id):
+    comment = Comment.objects.get(id = comment_id)
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('Home')
+    context ={'comment':comment}
+    return render(request,'delete-blog.html',context)
+
+@login_required(login_url='Login')
 def Add_Blog(request):
     form = BlogForm()
+    user = request.user
     if request.method == 'POST':
         form = BlogForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
+            blog = form.save(commit=False)
+            blog.host = user
+            blog.save()
             return redirect('Home')
     
     context = {'form' : form}
@@ -43,14 +67,30 @@ def Update_Blog(request,blog_id):
     context = {'form':form}
     return render(request,'add-blog.html',context)
 
+
 def Delete_Blog(request,blog_id):
+    page = "Delete-Blog"
     blog = Blog.objects.get(id = blog_id)
     if request.method == 'POST':
         blog.delete()
         return redirect('Home')
-    context ={'blog':blog}
+    context ={'blog':blog,'page':page}
     return render(request,'delete-blog.html',context)
 
+def Comments(request,blog_id):
+    blog = Blog.objects.get(id = blog_id)
+    comments = Comment.objects.all()
+    user = request.user
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comments.user = user
+            comment.blog = blog
+            comment.save()
+
+    context = {'comments' : comments,'blog':blog}
+    return redirect(request,'blog-page.html',context)
 
 def Sign_up(request):
     form = UserCreationForm()
@@ -79,7 +119,6 @@ def Logout(request):
     logout(request)
     return redirect('Home')
 
-@login_required(login_url='Login')
 def Password_change(request):  
     if request.method == 'POST':
         form = SetPasswordForm(user=request.user,data=request.POST)

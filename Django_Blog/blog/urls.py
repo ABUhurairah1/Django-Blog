@@ -11,6 +11,7 @@ urlpatterns = [
     path('create-blog/',Add_Blog,name="Create-Blog"),
     path('update-blog/<str:blog_id>',Update_Blog,name="Update-Blog"),
     path('delete-blog/<str:blog_id>',Delete_Blog,name="Delete-Blog"),
+     path('delete-comment/<str:comment_id>',Comment_delete,name="Delete-comment"),
     path('sign-up/',Sign_up,name='Sign-up'),
     path('login/',Login,name='Login'),
     path('logout/',Logout,name='Logout'),
