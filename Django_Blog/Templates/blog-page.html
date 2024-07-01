@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+{% block content%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<style>
+    .blog-img{
+        max-height: 400px;
+    }
+    body{
+        text-align: center;
+        padding: 0px 50px;
+    }
+</style>
+<body>
+    <h1>Blog</h1>
+    <div class="blog">
+        <h2>{{blog.name}}</h2>
+        <img class="blog-img" src="{{blog.image.url}}">
+        <p><b>Description : </b>{{blog.description}}</p>
+    </div>
+        <a class="btn" href="{% url 'Update-Blog' blog.id%}">Edit</a>
+        <a class="btn" href="{% url 'Delete-Blog' blog.id%}">Delete</a>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>Main</title>
+</head>
+<style>
+        a{
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .logo{
+            font-size: 20px;
+        }
+        .btn{
+            font-size: 16px;
+        border: 1px solid rgba(128, 128, 128, 0.677);
+        padding: 6px 18px;
+        border-radius: 10px;
+    }
+    nav{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 50px;
+    }
+    .blog-img{
+        max-width: 400px;
+    }
+</style>
+<body>
+    <nav>
+        <div class="logo">
+            <a href="{% url 'Home' %}">Home</a>
+        </div>
+        <div class="authentication">
+            {% if user.is_authenticated %}
+                 Hi {{ user.username }}!
+            <a href="{% url 'Logout' %}" class="btn">Logout</a>
+            <a href="{% url 'Password-change' %}" class="btn">Change Password</a>
+            {% else %}
+            <a class="btn" href="{% url 'Login' %}">Log In</a>
+            <a href="{% url 'Sign-up' %}" class="btn">Sign Up</a>
+            {% endif %}
+            
+        </div>
+    </nav>
+    {% block content%}
+    {% endblock %}
+</body>
+</html>
